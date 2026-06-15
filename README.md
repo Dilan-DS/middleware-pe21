@@ -66,3 +66,38 @@ PS D:\Cuarto Ciclo\PROGRAMACION DE MIDDLEWARE Y SEGURIDAD DE LA BASE DE DATOS\Mi
 Resultado:
 
 La compilación termina sin errores.
+
+
+
+## Testing
+
+Para esta actividad se agregaron pruebas unitarias básicas con Jest y ts-jest para validar los middlewares del proyecto sin levantar el servidor.
+
+Se probaron dos interceptores:
+
+    requestLogger, para verificar que invoque   next() y registre el método y la ruta.
+    requireApiKey, para verificar el comportamiento cuando la API key está ausente, incorrecta o válida.
+
+Comando de ejecución:
+
+    bash
+npm test
+
+Output real obtenido:
+PS D:\Cuarto Ciclo\PROGRAMACION DE MIDDLEWARE Y SEGURIDAD DE LA BASE DE DATOS\Middleware\api-Dilan> npm test
+
+> api-dilan@1.0.0 test
+> node --experimental-vm-modules node_modules/jest/bin/jest.js
+
+(node:24012) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21696) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ PASS  src/middlewares/logger.test.ts
+ PASS  src/middlewares/auth.test.ts
+
+Test Suites: 2 passed, 2 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        1.153 s
+Ran all test suites.
