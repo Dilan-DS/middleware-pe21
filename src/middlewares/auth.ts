@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
-export function requireApiKey(
+export function requireApiKey( 
   req: Request,
   res: Response,
   next: NextFunction,

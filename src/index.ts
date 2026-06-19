@@ -3,6 +3,9 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
+// importar las rutas v1 y v2 para iscripciones
+import v1Inscripciones from "./routers/v1/inscripciones.js";
+import v2Inscripciones from "./routers/v2/inscripciones.js";
 import { requestLogger } from "./middlewares/logger.js";
 import { requireApiKey } from "./middlewares/auth.js";
 const app = express();
@@ -12,6 +15,9 @@ app.use(requireApiKey); // 3. Autenticación
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", ts: new Date().toISOString() });
 });
+
+app.use("/v1/inscripciones", v1Inscripciones);
+app.use("/v2/inscripciones", v2Inscripciones);
 // Manejador de errores: siempre al final, con cuatro parámetros
 app.use((_err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: "Error interno del servidor" });

@@ -9,7 +9,9 @@ describe("requireApiKey", () => {
     const res = {} as Response;
 
     // status devuelve res para poder encadenar status().json()
-    res.status = jest.fn().mockReturnValue(res) as unknown as Response["status"];
+    res.status = jest
+      .fn()
+      .mockReturnValue(res) as unknown as Response["status"];
 
     // json devuelve res para completar la respuesta
     res.json = jest.fn().mockReturnValue(res) as unknown as Response["json"];
