@@ -121,3 +121,14 @@ Servidor corriendo en `http://localhost:3000`. Autenticación: header `x-api-key
 ### Escenario 4 — POST /v2/inscripciones con metodo_pago inválido (esperado: 400)
 
 ![v2 400 valor inválido](docs/screenshots/04-v2-400-invalido.png)
+
+## Validación con Redocly
+
+Se ejecutó el siguiente comando para validar el contrato OpenAPI:
+npx @redocly/cli lint openapi.yaml 
+
+![Redocly lint sin errores](docs/screenshots/TA-2.2/05-redocly-lint-ok.png)
+
+## Cambios que realizaría
+
+Si otro equipo empezara a consumir mi API mañana, mejoraría el contrato OpenAPI agregando descripciones más claras sobre las reglas que ya están definidas en el YAML, como el formato UUID del estudiante, la cantidad mínima de materias y los valores permitidos para el método de pago. También agregaría ejemplos de errores más específicos para que los desarrolladores sepan cómo corregir una solicitud cuando envíen datos inválidos.
