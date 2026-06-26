@@ -7,11 +7,15 @@ import express, {
 import v1Inscripciones from "./routers/v1/inscripciones.js";
 import v2Inscripciones from "./routers/v2/inscripciones.js";
 import { requestLogger } from "./middlewares/logger.js";
-import { requireApiKey } from "./middlewares/auth.js";
+import { requiereJwt } from "./middlewares/auth.js";
+import { rateLimiter } from "./middlewares/rateLimiter.js";
+
 const app = express();
 app.use(express.json()); // 1. Parseo del cuerpo
 app.use(requestLogger); // 2. Logger
-app.use(requireApiKey); // 3. Autenticación
+// app.use(requireApiKey); // 3. Autenticación
+app.use(requiereJwt); // 3. Autenticación JWT
+app.use(rateLimiter); // 4. Rate limiting
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", ts: new Date().toISOString() });
 });

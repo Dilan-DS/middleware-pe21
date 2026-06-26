@@ -132,3 +132,69 @@ npx @redocly/cli lint openapi.yaml
 ## Cambios que realizaría
 
 Si otro equipo empezara a consumir mi API mañana, mejoraría el contrato OpenAPI agregando descripciones más claras sobre las reglas que ya están definidas en el YAML, como el formato UUID del estudiante, la cantidad mínima de materias y los valores permitidos para el método de pago. También agregaría ejemplos de errores más específicos para que los desarrolladores sepan cómo corregir una solicitud cuando envíen datos inválidos.
+## Seguridad JWT (PE-2.3)
+
+### Generar un token de prueba
+
+En PowerShell:
+
+```powershell
+# Con el secreto por defecto del laboratorio:
+$env:JWT_SECRET="secreto-demo-pe23"
+$TOKEN = node generate-token.mjs
+echo $TOKEN
+
+# Con secreto personalizado:
+$env:JWT_SECRET="mi-secreto-largo"
+$TOKEN = node generate-token.mjs
+echo $TOKEN
+```
+
+### Probar el servicio
+
+```powershell
+# Petición válida (esperado: 201 Created)
+curl -X POST http://localhost:3000/v2/inscripciones `
+  -H "Authorization: Bearer $TOKEN" `
+  -H "Content-Type: application/json" `
+  -d '{"estudianteId":"uuid-123","materias":["LTI_05A_458"],"periodoId":"2026-1","metodo_pago":"Efectivo"}'
+
+# Token inválido por firma incorrecta (esperado: 401 Unauthorized)
+curl -X POST http://localhost:3000/v2/inscripciones `
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ4In0.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" `
+  -H "Content-Type: application/json" `
+  -d '{}'
+
+# Token con algoritmo no permitido alg:none (esperado: 401 Unauthorized)
+curl -X POST http://localhost:3000/v2/inscripciones `
+  -H "Authorization: Bearer eyJhbGciOiJub25lIn0.eyJzdWIiOiJ4In0." `
+  -H "Content-Type: application/json" `
+  -d '{}'
+```
+
+### Variables de entorno
+
+Copia `.env.example` a `.env` y configura `JWT_SECRET` con un valor secreto largo.
+
+Ejemplo de `.env`:
+
+```env
+JWT_SECRET=secreto-demo-pe23
+```
+
+El archivo `.env` no debe subirse al repositorio. Solo se debe subir `.env.example`, ya que documenta las variables necesarias sin revelar el secreto real.
+### Evidencias en Postman
+
+#### Prueba 1 — Token válido: 201 Created
+
+![Prueba 1 - Body enviado y respuesta 201](docs/screenshots/PE-2.3/PE23_prueba1_201_body.png)
+
+![Prueba 1 - Header Authorization y respuesta 201](docs/screenshots/PE-2.3/PE23_prueba1_201_headers.png)
+
+#### Prueba 2 — Firma inválida: 401 Unauthorized
+
+![Prueba 2 - Firma inválida 401](docs/screenshots/PE-2.3/PE23_prueba2_401.png)
+
+#### Prueba 3 — Token con alg none: 401 Unauthorized
+
+![Prueba 3 - Algoritmo no permitido 401](docs/screenshots/PE-2.3/PE23_prueba3_401_body.png)
